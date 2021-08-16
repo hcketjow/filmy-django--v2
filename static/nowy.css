@@ -1,0 +1,31 @@
+body{
+    
+    background-image: url(kino.png);
+    margin:0;
+    padding:0;
+    height:100%;
+}
+.film-plakat {
+    float: left;
+    transition: transform 0.2s ease-in-out;
+}
+
+.film-plakat:hover {
+    transform: scale(0.9);
+}
+
+.film-icon {
+    font-size: 1.6rem;
+}
+.card {
+    width: 36rem;
+}
+
+
+/* .not-visible{
+    display: none;
+} */
+
+/* h4{
+    text-align: center;
+} */

@@ -1,0 +1,20 @@
+{% extends 'glowny.html' %}
+{% load bootstrap %}
+{% load static %}
+{% block tytul %} Zaloguj się {% endblock %}
+{% block strona %}
+
+      <div class="row">
+          <div class="col-4" style="margin-left: auto; margin-right: auto; color: white;">
+              <h5 style="font-size: 35px; text-align: center;">Zaloguj się</h5>
+              <form method="post">
+                  {% csrf_token %}
+                  {{ form|bootstrap }}
+                  <br>  
+                  <button type="submit" class="btn btn-primary" style="float: right;">Zaloguj się <i class="fas fa-sign-in-alt"></i></button>
+              </form>
+              <button class="btn btn-primary"><a href="{% url 'wszystkie_filmy' %}" style="color: white; text-decoration: none;">Strona Główna</a></button> 
+          </div>
+      </div>
+      
+{% endblock %}

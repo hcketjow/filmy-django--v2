@@ -1,0 +1,123 @@
+{% extends 'glowny.html' %}
+{% load bootstrap %}
+{% block tytul %} Lista {% endblock %}
+{% block strona %}
+
+
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-dark p-4 ">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dzila" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'wszystkie_filmy' %}"><img height="60px" src="/media/plakaty/icon.png" alt=""></a>
+            <div class="collapse navbar-collapse" id="dzila">
+                <form class="form-floating col mt-3" action="." method="GET" >
+                    <div class="form-floating mb-2">
+                        <input class="form-control" type="search" name="q"  placeholder="Wyszukaj" aria-label="Search" value="{{ request.GET.q }}">
+                        <label for="floatingInput">Szukaj filmu, serialu</label>
+                    </div>
+                </form>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a href="{% url 'export_excel' %}" class="btn btn-primary" style="margin-left: 10px;">Pobierz Excel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'export_xml' %}" class="btn btn-info" style="margin-left: 10px; margin-right: 10px;">Wygeneruj XML</a>
+                    </li>
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                            <!-- <li class="nav-item">
+                                <h2 class="navbar-brand"> Witaj {{ user.username }}</h2>
+                            </li> -->
+                            <a href="{% url 'logout' %}" class="btn btn-danger">Wyloguj się <i class="fas fa-sign-out-alt"></i></a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-success">Zaloguj się <i class="fas fa-sign-in-alt"></i></a>
+                        {% endif %}
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
+    </nav>
+    
+    <br><br><br><br>
+    <hr>
+   
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Tytul</th>
+                <th>Opis</th>
+                <th>Rok wydania</th>
+                <th>Reżyseria</th>
+                <th>Scenariusz</th>
+                <th>Kraj produkcji</th>
+                <th>EDYTUJ</th>
+                <th>USUN</th>
+            </tr>
+        </thead>
+        {% if lista|length == 0 %}
+            <h2>Brak filmów</h2>
+        {% else %}
+            {% for film in lista %} 
+                <tbody>
+                    <tr>
+                        <th scope="col" class="fw-lighter">
+                            {{film.film_tytul}}
+                            <br><br>
+                            <img src="/media/{{ film.film_plakat }}" width="80" height="80">
+                        </th>
+                        <th scope="col" class= "col-6 fw-lighter">{{film.film_opis}}</th>
+                        <th scope="col" class="fw-lighter">{{film.film_rok_produkcji}}</th>
+                        <th scope="col" class="fw-lighter">{{film.film_rezyseria}}</th>
+                        <th scope="col" class="fw-lighter">{{film.film_scenaruisz}}</th>
+                        <th scope="col" class="fw-lighter">{{film.film_kraj_produkcji}}</th>
+                        <th scope="col" class="fw-lighter"><a href="{% url 'edytuj_film' film.id %}"><i class="far fa-edit"></i></a></th>
+                        <th scope="col" class="fw-lighter"><a href="{% url 'usun_film' film.id %}"><i class="fas fa-trash-alt"></i></a></th>
+                    </tr>
+                </tbody>
+            {% endfor %}
+
+         
+
+        {% endif %}
+    </table>
+        {% if lista.has_other_pages %}
+            <nav aria-label="Page navigation example" style="margin-bottom: 50px;">
+                <ul class="pagination justify-content-center">
+                    {% if lista.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link bg-dark" href="?page={{ lista.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                                <i class="material-icons text-white">Previous</i>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled page-item">
+                            <a class="page-link bg-dark" href="#!">
+                                <i class="material-icons">Previous</i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% for num in lista.paginator.page_range %}
+                        {% if lista.number == num %}
+                            <li class="active page-item "><a class="page-link bg-dark" href="#!">{{ num }}</a></li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link bg-dark" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if lista.has_next %}
+                        <li class="page-item">
+                            <a class="page-link bg-dark" href="?page={{ lista.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                                <i class="material-icons text-white">Next</i>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="disabled page-item"><a class="page-link bg-dark" href="#!"><i class="material-icons">Next</i></a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+{% endblock %}
