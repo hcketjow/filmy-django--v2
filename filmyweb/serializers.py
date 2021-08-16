@@ -20,5 +20,5 @@ class FilmSerializer(serializers.HyperlinkedModelSerializer):
             'film_wersja_wyswietlania',
             'film_wersja_jezykowa',
             'film_gatunek',
-            'film_dodatkowe'
+            'dodatkowe'
         ]

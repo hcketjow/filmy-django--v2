@@ -1,7 +1,7 @@
 from django.core import serializers
 from django.core.serializers import serialize
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Film, Dystrybutor2, Ocena
+from .models import Film, Dystrybutor, Ocena
 from .forms import FilmForm, DystrybutorForm, OcenaForm
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
@@ -21,6 +21,9 @@ class FilmView(viewsets.ModelViewSet):
     queryset = Film.objects.all()
     serializer_class = FilmSerializer
 
+def is_valid_queryparam(param):
+    return param !='' and param is not None
+
 def wszystkie_filmy(request):
     wszystkie = Film.objects.all()
     query = request.GET.get('q')
@@ -31,21 +34,21 @@ def wszystkie_filmy(request):
 
     if query:
         wszystkie = Film.objects.filter(
-            Q(film_tytul__icontains=query) | Q(film_rok_produkcji__icontains=query) |
-            Q(film_rezyseria__icontains=query) | Q(film_scenaruisz__icontains=query) |
-            Q(film_kraj_produkcji__icontains=query)
+            Q(film_tytul__icontains=query) | Q(film_tytul_oryginalny__icontains=query) |
+            Q(film_rok_produkcji__icontains=query) | Q(film_opis__icontains=query) |
+            Q(film_rezyseria__icontains=query) | Q(film_scenaruisz__icontains=query)
         ).distinct()
-    if rok_powstania:
-        wszystkie = Film.objects.filter(film_rok_produkcji__icontains=rok_powstania).distinct()
-    if rezyseria_szukaj:
-        wszystkie = Film.objects.filter(film_rezyseria__icontains=rezyseria_szukaj).distinct()
-    if filmy_szukaj:
-        wszystkie = Film.objects.filter(film_tytul__icontains=filmy_szukaj).distinct()
-    if scenariusz_szukaj:
-        wszystkie = Film.objects.filter(film_scenaruisz__icontains=scenariusz_szukaj).distinct()
+    if  is_valid_queryparam(rok_powstania):
+        wszystkie = wszystkie.filter(film_rok_produkcji__icontains=rok_powstania)
+    if is_valid_queryparam(rezyseria_szukaj):
+        wszystkie = wszystkie.filter(film_rezyseria__icontains=rezyseria_szukaj)
+    if is_valid_queryparam(filmy_szukaj):
+        wszystkie = wszystkie.filter(film_tytul__icontains=filmy_szukaj)
+    if is_valid_queryparam(scenariusz_szukaj):
+        wszystkie = wszystkie.filter(film_scenaruisz__icontains=scenariusz_szukaj)
 
 
-    paginator = Paginator(wszystkie,6)
+    paginator = Paginator(wszystkie,9)
     page = request.GET.get('page')
 
     try: 
@@ -88,8 +91,8 @@ def edytuj_film(request, id):
     # aktorzy = film.aktorzy.all()
 
     try:
-        dodatkowe = Dystrybutor2.objects.get(film=film.id)
-    except Dystrybutor2.DoesNotExist:
+        dodatkowe = Dystrybutor.objects.get(film=film.id)
+    except Dystrybutor.DoesNotExist:
         dodatkowe = None
 
     form_film = FilmForm(request.POST or None, request.FILES or None, instance=film)
@@ -133,9 +136,9 @@ def lista_film(request):
 
     if szukaj:
         lista = Film.objects.filter(
-            Q(film_tytul__icontains=szukaj) | Q(film_rok_produkcji__icontains=szukaj) |
-            Q(film_rezyseria__icontains=szukaj) | Q(film_scenaruisz__icontains=szukaj) |
-            Q(film_kraj_produkcji__icontains=szukaj)
+            Q(film_tytul__icontains=szukaj) | Q(film_tytul_oryginalny__icontains=szukaj) |
+            Q(film_rok_produkcji__icontains=szukaj) | Q(film_opis__icontains=szukaj) |
+            Q(film_rezyseria__icontains=szukaj) | Q(film_scenaruisz__icontains=szukaj)
         ).distinct()
 
     paginator = Paginator(lista,6)
@@ -175,15 +178,16 @@ def export_excel(request):
     font_style.font.bold = True
 
     columns = [
-        'Id'
+        'Id',
         'Identyfikator',
-        'Tytuł',
-        'Tytuł_oryginalny',
-        'Kraj_produkcji',
-        'Wesja_wyświelteniowa',
-        'Wersja_jęzkowa',
+        'Tytul',
+        'Tytul oryginalny',
+        'Rok produkcji',
+        'Kraj produkcji',
+        'Wersja wyswietlania',
+        'Wersja językowa',
         'Gatunek',
-        'Dystrybutor',
+        # 'Dystrybutor',
     ]
 
     for col_num in range(len(columns)):
@@ -194,16 +198,16 @@ def export_excel(request):
 
     rows = Film.objects.all().values_list(
         'id',
-        'film_identyfikator'
+        'film_identyfikator',
         'film_tytul',
         'film_tytul_oryginalny',
         'film_rok_produkcji',
         'film_kraj_produkcji',
-        'film_opis',
-        'film_rezyseria',
-        'film_scenaruisz',
-        'film_produkcja'
-    )
+        'film_wersja_wyswietlania',
+        'film_wersja_jezykowa',
+        'film_gatunek',
+        'dodatkowe',
+        )
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):
@@ -212,7 +216,6 @@ def export_excel(request):
     wb.save(response)
 
     return response
-
 
 
 

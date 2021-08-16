@@ -1,7 +1,7 @@
 from django.db import models
 from embed_video.fields import EmbedVideoField
 
-class Dystrybutor2(models.Model):
+class Dystrybutor(models.Model):
     dys_nazwa = models.CharField(max_length=50,default="")
     dys_adres = models.CharField(max_length=500, default="")
     dys_nip = models.CharField(max_length=10, default="")
@@ -29,7 +29,7 @@ class Film(models.Model):
     film_rok_produkcji = models.PositiveSmallIntegerField(default=2000)
     film_opis = models.TextField(default="", max_length=1000)
     film_plakat = models.ImageField(upload_to="plakaty", null=True, blank=True)
-    film_dodatkowe = models.OneToOneField(Dystrybutor2, on_delete=models.CASCADE, null=True, blank=True)
+    dodatkowe = models.OneToOneField(Dystrybutor, on_delete=models.CASCADE, null=True, blank=True)
     film_rezyseria = models.CharField(default="", max_length=100)
     film_scenaruisz = models.CharField(default="", max_length=100)
     film_kraj_produkcji = models.CharField(default="", max_length=100)

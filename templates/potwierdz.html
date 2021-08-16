@@ -4,8 +4,8 @@
 
 {% block strona %} 
   <div class="row">
-    <div class="col-4" style="margin-left: auto; margin-right: auto;">
-          <h5 class="card-title text-capitalize" style="font-size: 50px">Czy napewno chcesz usunac "{{ film.film_tytul }}" film?</h5>
+    <div class="col-4 col-xs-3 bg-dark rounded p-4" style="margin-left: auto; margin-right: auto;">
+          <h5 class="text-light fs-3 fw-light mb-3">Czy napewno chcesz usunac "{{ film.film_tytul }}" film?</h5>
           <br>
           <form method="post">
             {% csrf_token %}

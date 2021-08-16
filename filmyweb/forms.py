@@ -1,7 +1,7 @@
 from django.db.models import fields
 from django.db.models.fields import files
 from django.forms import ModelForm
-from .models import Film, Dystrybutor2, Ocena
+from .models import Film, Dystrybutor, Ocena
 
 class FilmForm(ModelForm):
     class Meta:
@@ -24,7 +24,7 @@ class FilmForm(ModelForm):
 
 class DystrybutorForm(ModelForm):
     class Meta:
-        model = Dystrybutor2
+        model = Dystrybutor
         fields = [
             'dys_nazwa',
             'dys_adres',

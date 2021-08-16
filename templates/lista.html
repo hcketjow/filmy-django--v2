@@ -2,14 +2,14 @@
 {% load bootstrap %}
 {% block tytul %} Lista {% endblock %}
 {% block strona %}
-
+{% load static %}
 
     <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-dark p-4 ">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dzila" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'wszystkie_filmy' %}"><img height="60px" src="/media/plakaty/icon.png" alt=""></a>
+            <a class="navbar-brand" href="{% url 'wszystkie_filmy' %}"><img height="60px" src="{% static 'icon.png' %}" alt=""></a>
             <div class="collapse navbar-collapse" id="dzila">
                 <form class="form-floating col mt-3" action="." method="GET" >
                     <div class="form-floating mb-2">
