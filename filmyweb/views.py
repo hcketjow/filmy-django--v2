@@ -36,7 +36,9 @@ def wszystkie_filmy(request):
         wszystkie = Film.objects.filter(
             Q(film_tytul__icontains=query) | Q(film_tytul_oryginalny__icontains=query) |
             Q(film_rok_produkcji__icontains=query) | Q(film_opis__icontains=query) |
-            Q(film_rezyseria__icontains=query) | Q(film_scenaruisz__icontains=query)
+            Q(film_rezyseria__icontains=query) | Q(film_scenaruisz__icontains=query) |
+            Q(film_kraj_produkcji__icontains=query) | Q(film_wersja_wyswietlania__icontains=query) |
+            Q(film_wersja_jezykowa__icontains=query)
         ).distinct()
     if  is_valid_queryparam(rok_powstania):
         wszystkie = wszystkie.filter(film_rok_produkcji__icontains=rok_powstania)
@@ -138,7 +140,9 @@ def lista_film(request):
         lista = Film.objects.filter(
             Q(film_tytul__icontains=szukaj) | Q(film_tytul_oryginalny__icontains=szukaj) |
             Q(film_rok_produkcji__icontains=szukaj) | Q(film_opis__icontains=szukaj) |
-            Q(film_rezyseria__icontains=szukaj) | Q(film_scenaruisz__icontains=szukaj)
+            Q(film_rezyseria__icontains=szukaj) | Q(film_scenaruisz__icontains=szukaj) |
+            Q(film_kraj_produkcji__icontains=szukaj) | Q(film_wersja_wyswietlania__icontains=szukaj) |
+            Q(film_wersja_jezykowa__icontains=szukaj)
         ).distinct()
 
     paginator = Paginator(lista,6)
