@@ -8,16 +8,16 @@
         <div class="row gx-5">
     {% endif %}
         <div class="col">
-          {% if nowy %}
+            {% if nowy %}
                 <h5 class="text-light fs-3 fw-light mb-3">Dodaj nowy film</h5>
             {% else %}
-                <h5 class="text-light fs-3 fw-light mb-3 ">Edutuj film</h5>
+                <h5 class="text-light fs-3 fw-light p-4 m-lg-auto">Edytuj film</h5>
             {% endif %}
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="container bg-dark fs-5 fw-light text-light col-12 rounded p-4">
                         {{ form|bootstrap }}
-                        {{ form_dodatkowe|bootstrap }}
+                        {{ form_dystrybutor|bootstrap }}
                     <br>
                         {% if nowy %}
                             <br>

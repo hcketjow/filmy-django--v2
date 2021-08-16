@@ -20,6 +20,7 @@ class UserView(viewsets.ModelViewSet):
 class FilmView(viewsets.ModelViewSet):
     queryset = Film.objects.all()
     serializer_class = FilmSerializer
+    
 
 def is_valid_queryparam(param):
     return param !='' and param is not None
@@ -69,18 +70,18 @@ def wszystkie_filmy(request):
 @login_required
 def nowy_film(request):
     form_film = FilmForm(request.POST or None, request.FILES or None)
-    form_dodatkowe = DystrybutorForm(request.POST or None)
+    form_dystrybutor = DystrybutorForm(request.POST or None)
 
-    if all((form_film.is_valid(), form_dodatkowe.is_valid())):
+    if all((form_film.is_valid(), form_dystrybutor.is_valid())):
         film = form_film.save(commit=False)
-        dodatkowe = form_dodatkowe.save()
-        film.dodatkowe = dodatkowe
+        dystrybutor = form_dystrybutor.save()
+        film.dystrybutor = dystrybutor
         film.save()
         return redirect(wszystkie_filmy)
 
     return render(request, 'film_form.html', {
         'form': form_film,
-        'form_dodatkowe': form_dodatkowe,
+        'form_dystrybutor': form_dystrybutor,
         'oceny': None,
         'form_ocena': None, 
         'nowy': True,
@@ -93,12 +94,12 @@ def edytuj_film(request, id):
     # aktorzy = film.aktorzy.all()
 
     try:
-        dodatkowe = Dystrybutor.objects.get(film=film.id)
+        dystrybutor = Dystrybutor.objects.get(film=film.id)
     except Dystrybutor.DoesNotExist:
-        dodatkowe = None
+        dystrybutor = None
 
     form_film = FilmForm(request.POST or None, request.FILES or None, instance=film)
-    form_dodatkowe = DystrybutorForm(request.POST or None, instance=dodatkowe)
+    form_dystrybutor = DystrybutorForm(request.POST or None, instance=dystrybutor)
     form_ocena = OcenaForm(None)
 
     if request.method == "POST":
@@ -107,16 +108,16 @@ def edytuj_film(request, id):
             ocena.film = film
             ocena.save()
 
-    if all((form_film.is_valid(), form_dodatkowe.is_valid())):
+    if all((form_film.is_valid(), form_dystrybutor.is_valid())):
         film = form_film.save(commit=False)
-        dodatkowe = form_dodatkowe.save()
-        film.dodatkowe = dodatkowe
+        dystrybutor = form_dystrybutor.save()
+        film.dystrybutor = dystrybutor
         film.save()
         return redirect(wszystkie_filmy)
 
     return render(request, 'film_form.html', {
         'form': form_film,
-        'form_dodatkowe': form_dodatkowe,
+        'form_dystrybutor': form_dystrybutor,
         'oceny': oceny,
         'form_ocena': form_ocena,
         'nowy': False})
@@ -210,7 +211,7 @@ def export_excel(request):
         'film_wersja_wyswietlania',
         'film_wersja_jezykowa',
         'film_gatunek',
-        'dodatkowe',
+        'dystrybutor',
         )
     for row in rows:
         row_num += 1

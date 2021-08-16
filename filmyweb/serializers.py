@@ -16,9 +16,17 @@ class FilmSerializer(serializers.HyperlinkedModelSerializer):
             'film_tytul',
             'film_tytul_oryginalny',
             'film_rok_produkcji',
-            'film_kraj_produkcji'
+            'film_kraj_produkcji',
             'film_wersja_wyswietlania',
             'film_wersja_jezykowa',
-            'film_gatunek',
-            'dodatkowe'
         ]
+        extra_kwargs = {
+                'film_identyfikator': {'read_only': True},
+                'film_tytul': {'read_only': True},
+                'film_tytul_oryginalny': {'read_only': True},
+                'film_rok_produkcji': {'read_only': True},
+                'film_kraj_produkcji': {'read_only': True},
+                'film_wersja_wyswietlania': {'read_only': True},
+                'film_wersja_jezykowa': {'read_only': True},
+        }
+        

@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1+hsqk4m6)3#ip#2wog)-^2qy(4p+6$9z$e6o#psdpck!@e2yr'
+SECRET_KEY = '1+hsqk4m6)3#ip#2wog)-^2qy(4p+6$9z$ef6o#psdpck!@e2yr'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'filmy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["templates"],
+        'DIRS': [r'C:\inetpub\wwwroot\filmy-django-main\templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,16 +136,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = 'moje_media'
+MEDIA_ROOT = '/moje_media/'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'wszystkie_filmy'
 LOGOUT_REDIRECT_URL = 'login'
-

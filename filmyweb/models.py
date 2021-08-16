@@ -6,12 +6,20 @@ class Dystrybutor(models.Model):
     dys_adres = models.CharField(max_length=500, default="")
     dys_nip = models.CharField(max_length=10, default="")
     
+    def __str__(self):
+        return self.dys_nazwa
 
 class Gatunek(models.Model):
     gatunek = models.CharField(blank=True, max_length=150)
     
     def __str__(self):
         return self.gatunek
+
+class Kraj_produkcji(models.Model):
+    kraj_produkcji = models.CharField(blank=True, max_length=150)
+    
+    def __str__(self):
+        return self.kraj_produkcji
 
 class Film(models.Model):
     WERSJA = {
@@ -29,10 +37,10 @@ class Film(models.Model):
     film_rok_produkcji = models.PositiveSmallIntegerField(default=2000)
     film_opis = models.TextField(default="", max_length=1000)
     film_plakat = models.ImageField(upload_to="plakaty", null=True, blank=True)
-    dodatkowe = models.OneToOneField(Dystrybutor, on_delete=models.CASCADE, null=True, blank=True)
+    dystrybutor = models.ForeignKey(Dystrybutor, on_delete=models.CASCADE, null=True, blank=True)
     film_rezyseria = models.CharField(default="", max_length=100)
     film_scenaruisz = models.CharField(default="", max_length=100)
-    film_kraj_produkcji = models.CharField(default="", max_length=100)
+    film_kraj_produkcji = models.ForeignKey(Kraj_produkcji, on_delete=models.CASCADE, null=True, blank=True)
     film_video = EmbedVideoField(default="")
     film_czas_trwania = models.PositiveSmallIntegerField(default=0)
     film_gatunek = models.ForeignKey(Gatunek, on_delete=models.CASCADE, null=True, blank=True)
